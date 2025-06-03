@@ -3,10 +3,9 @@
   "version": "1.0.0",
   "description": "Euskarazko sinonimoak ikasteko eguneroko jokoa.",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "preview": "vite preview"
-},
+    "dev": "echo 'Exekutatu index.html arakatzaile batean garapen zerbitzari batekin (adib. Live Server VSCode-n)'",
+    "build": "echo 'Eraikuntza urratsa ez da beharrezkoa esbuild/CDN erabiliz gero.'"
+  },
   "keywords": [
     "react",
     "typescript",
@@ -18,15 +17,13 @@
   "author": "AI Assistant",
   "license": "UNLICENSED",
   "dependencies": {
-    "@google/genai": "^0.3.0",
+    "@google/genai": "^0.16.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
-    "@vitejs/plugin-react": "^4.5.0",
-    "typescript": "^5.0.0",
-    "vite": "^6.3.5"
+    "typescript": "^5.0.0"
   }
 }

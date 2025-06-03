@@ -1,6 +1,6 @@
-
 {
   "name": "Eguneko Sinonimoak",
   "description": "Euskarazko sinonimoak ikasteko eguneroko jokoa. Aukeratu hitz bakoitzarentzat sinonimo zuzena hiru aukeren artean. Galderak aurrez definitutako zerrenda batetik hartzen dira.",
-  "requestFramePermissions": []
+  "requestFramePermissions": [],
+  "prompt": ""
 }

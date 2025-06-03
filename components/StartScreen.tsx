@@ -4,23 +4,25 @@ import Button from './Button';
 
 interface StartScreenProps {
   onStartGame: () => void;
-  disabled?: boolean; // disabled prop gehitu
 }
 
-const StartScreen: React.FC<StartScreenProps> = ({ onStartGame, disabled = false }) => {
+const StartScreen: React.FC<StartScreenProps> = ({ onStartGame }) => {
   return (
     <div 
-      className="min-h-screen flex flex-col items-center justify-between p-6 sm:p-8 text-center bg-sky-50"
+      className="min-h-screen flex flex-col items-center justify-between p-6 sm:p-8 text-center bg-gradient-to-br from-sky-500 to-sky-700 text-white"
+      // backgroundImage style removed
     >
       <div className="flex-grow flex flex-col justify-center items-center w-full">
         <div className="my-8 sm:my-12">
           <h1 
-            className="text-6xl sm:text-8xl font-extrabold text-sky-700"
+            className="text-6xl sm:text-8xl font-extrabold text-white"
+            // style textShadow removed
           >
             KAIXO!
           </h1>
           <p 
-            className="text-4xl sm:text-6xl font-bold mt-2 text-sky-600"
+            className="text-4xl sm:text-6xl font-bold mt-2 text-white"
+            // style textShadow removed
           >
             ONGI ETORRI
           </p>
@@ -31,19 +33,16 @@ const StartScreen: React.FC<StartScreenProps> = ({ onStartGame, disabled = false
         <Button 
           onClick={onStartGame} 
           className="w-full text-2xl py-4" 
-          variant="primary"
+          variant="primary" // Changed from success back to primary
           aria-label="Hasi jolasa"
-          disabled={disabled} // disabled prop aplikatu
         >
           HASI
         </Button>
-        {disabled && (
-          <p className="text-sm text-slate-500 mt-4">
-            Gaurkoan jokatu duzu. Bihar arte itxaron berriro jolasteko (8:00etatik aurrera)!
-          </p>
-        )}
       </div>
-       <footer className="py-6 text-sm text-sky-500">
+       <footer 
+        className="py-6 text-sm text-white opacity-90"
+        // style textShadow removed
+        >
         Eguneko Sinonimoak Jokoa
       </footer>
     </div>

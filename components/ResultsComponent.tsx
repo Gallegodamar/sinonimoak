@@ -1,20 +1,20 @@
+
 import React from 'react';
 import { UserAnswer } from '../types';
 import Button from './Button';
-import { BASE_SCORE_CORRECT_ANSWER } from '../constants'; // MAX_TIME_BONUS kendu da
+import { BASE_SCORE_CORRECT_ANSWER } from '../constants'; 
 
 interface ResultsComponentProps {
   answers: UserAnswer[];
   score: number; 
   totalQuestions: number;
-  onPlayTomorrow: () => void;
+  onPlayAgain: () => void; // Prop name changed
 }
 
-const ResultsComponent: React.FC<ResultsComponentProps> = ({ answers, score, totalQuestions, onPlayTomorrow }) => {
-  // Puntuazio maximo posiblea galdera bakoitzeko BASE_SCORE_CORRECT_ANSWER da orain
+const ResultsComponent: React.FC<ResultsComponentProps> = ({ answers, score, totalQuestions, onPlayAgain }) => {
   const maxPossibleScorePerQuestion = BASE_SCORE_CORRECT_ANSWER;
   const maxTotalPossibleScore = totalQuestions * maxPossibleScorePerQuestion;
-  const percentage = maxTotalPossibleScore > 0 ? Math.round((score / maxTotalPossibleScore) * 100) : 0;
+  // const percentage = maxTotalPossibleScore > 0 ? Math.round((score / maxTotalPossibleScore) * 100) : 0; // Percentage calculation removed
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700 text-white p-4 sm:p-6">
@@ -23,7 +23,8 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({ answers, score, tot
         <p className="text-5xl sm:text-6xl font-extrabold my-4 sm:my-6">
           {score} puntu
         </p>
-        <p className="text-xl sm:text-2xl text-indigo-200 mb-6 sm:mb-8">({percentage}%)</p>
+        {/* Percentage display removed from here */}
+        {/* <p className="text-xl sm:text-2xl text-indigo-200 mb-6 sm:mb-8">({percentage}%)</p> */}
 
         <div className="space-y-4 sm:space-y-5 my-6 sm:my-8 max-h-80 overflow-y-auto pr-2 text-left">
           {answers.map((answer, index) => (
@@ -52,8 +53,8 @@ const ResultsComponent: React.FC<ResultsComponentProps> = ({ answers, score, tot
           ))}
         </div>
 
-        <Button onClick={onPlayTomorrow} variant="primary" className="mt-6 sm:mt-8 text-lg sm:text-xl px-8 py-3">
-          Bihar Arte!
+        <Button onClick={onPlayAgain} variant="primary" className="mt-6 sm:mt-8 text-lg sm:text-xl px-8 py-3">
+          Berriro Jokatu 
         </Button>
          <p className="mt-8 text-xs text-indigo-300">
             Eskerrik asko jolasteagatik! Hitz berriak bihar 8:00etan egongo dira prest.

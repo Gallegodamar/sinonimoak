@@ -2,7 +2,7 @@
 export const DAILY_FETCH_HOUR = 8; // 8:00 AM
 export const NUM_QUESTIONS_TO_GENERATE = 5;
 
-export const LOCALSTORAGE_QUESTIONS_KEY = 'dailySynonymGame_data_v5'; // Bertsioa eguneratuta
+export const LOCALSTORAGE_QUESTIONS_KEY = 'dailySynonymGame_data_v6'; // Bertsioa eguneratuta
 export const SCORE_TO_PASS_LEVEL = 3; 
 
 // Puntuazio berriaren konstanteak

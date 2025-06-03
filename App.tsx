@@ -32,7 +32,7 @@ const App: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<UserAnswer[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [canPlayToday, setCanPlayToday] = useState<boolean>(true);
+  // const [canPlayToday, setCanPlayToday] = useState<boolean>(true); // REMOVED
 
   const performInitialWordLoad = useCallback(() => {
     setErrorMessage(null);
@@ -45,20 +45,11 @@ const App: React.FC = () => {
       const shuffledAll = shuffleArray(allQuestions);
       const dailySet = shuffledAll.slice(0, NUM_QUESTIONS_TO_GENERATE);
 
-      const currentStoredDataRaw = localStorage.getItem(LOCALSTORAGE_QUESTIONS_KEY);
-      let existingLastPlayedDate: string | undefined = undefined;
-      if (currentStoredDataRaw) {
-          try {
-              const currentStoredData: Partial<StoredGameData> = JSON.parse(currentStoredDataRaw);
-              existingLastPlayedDate = currentStoredData.lastPlayedDate;
-          } catch (e) { console.error("Error parsing existing data in performInitialWordLoad", e); }
-      }
-
       setQuestions(dailySet);
       const gameData: StoredGameData = {
         questions: dailySet,
         fetchTimestamp: new Date().toISOString(),
-        lastPlayedDate: existingLastPlayedDate // Mantendu lehendik zegoen lastPlayedDate
+        // No lastPlayedDate
       };
       localStorage.setItem(LOCALSTORAGE_QUESTIONS_KEY, JSON.stringify(gameData));
       setCurrentQuestionIndex(0);
@@ -79,67 +70,39 @@ const App: React.FC = () => {
   useEffect(() => {
     const storedDataRaw = localStorage.getItem(LOCALSTORAGE_QUESTIONS_KEY);
     const now = new Date();
-    let playToday = true;
-
-    if (storedDataRaw) {
-      try {
-        const storedData: StoredGameData = JSON.parse(storedDataRaw);
-        if (storedData.lastPlayedDate) {
-          const lastPlayed = new Date(storedData.lastPlayedDate);
-          if (lastPlayed.toDateString() === now.toDateString()) {
-            playToday = false; 
-          }
-        }
-
-        if (gameState === 'LOADING') {
-          const lastFetchDate = new Date(storedData.fetchTimestamp);
-          const isSameDayAsFetch = lastFetchDate.toDateString() === now.toDateString();
-          const fetchedTodayAfter8AM = isSameDayAsFetch && lastFetchDate.getHours() >= DAILY_FETCH_HOUR;
-          const isCurrentlyBefore8AM = now.getHours() < DAILY_FETCH_HOUR;
-
-          if (fetchedTodayAfter8AM || (isSameDayAsFetch && isCurrentlyBefore8AM)) { 
-            setQuestions(storedData.questions);
-            setCurrentQuestionIndex(0); 
-            setUserAnswers([]);       
-            setGameState('PLAYING');
-            setCanPlayToday(playToday);
-            return;
-          }
-        }
-      } catch (e) {
-        console.error("Errorea gordetako datuak parseatzean:", e);
-        localStorage.removeItem(LOCALSTORAGE_QUESTIONS_KEY); 
-      }
-    }
-    
-    setCanPlayToday(playToday);
 
     if (gameState === 'LOADING') {
-      performInitialWordLoad();
+        if (storedDataRaw) {
+            try {
+                const storedData: StoredGameData = JSON.parse(storedDataRaw);
+                const lastFetchDate = new Date(storedData.fetchTimestamp);
+                const isSameDayAsFetch = lastFetchDate.toDateString() === now.toDateString();
+                
+                const useStoredToday = isSameDayAsFetch && 
+                                       (lastFetchDate.getHours() >= DAILY_FETCH_HOUR || now.getHours() < DAILY_FETCH_HOUR);
+
+                if (useStoredToday && storedData.questions && storedData.questions.length > 0) {
+                    setQuestions(storedData.questions);
+                    setCurrentQuestionIndex(0);
+                    setUserAnswers([]);
+                    setGameState('PLAYING');
+                    return; 
+                }
+            } catch (e) {
+                console.error("Errorea gordetako datuak parseatzean:", e);
+                localStorage.removeItem(LOCALSTORAGE_QUESTIONS_KEY); 
+            }
+        }
+        performInitialWordLoad();
     }
   }, [gameState, performInitialWordLoad]);
 
+  // useEffect for RESULTS state no longer needs to manage lastPlayedDate
   useEffect(() => {
     if (gameState === 'RESULTS') {
-      const storedDataRaw = localStorage.getItem(LOCALSTORAGE_QUESTIONS_KEY);
-      const nowISO = new Date().toISOString();
-      let gameData: Partial<StoredGameData> = { questions: [], fetchTimestamp: new Date(0).toISOString() };
-
-      if (storedDataRaw) {
-        try {
-          gameData = JSON.parse(storedDataRaw);
-        } catch (e) { console.error("Error parsing data to set lastPlayedDate", e); }
-      }
-      
-      const updatedData: StoredGameData = {
-        questions: gameData.questions || questions,
-        fetchTimestamp: gameData.fetchTimestamp || new Date().toISOString(), 
-        lastPlayedDate: nowISO
-      };
-      localStorage.setItem(LOCALSTORAGE_QUESTIONS_KEY, JSON.stringify(updatedData));
-      setCanPlayToday(false); 
+      // Actions for results screen, if any, other than play limit.
     }
-  }, [gameState, questions]);
+  }, [gameState]);
 
   const handleStartGame = () => {
     setGameState('LOADING');
@@ -183,15 +146,15 @@ const App: React.FC = () => {
   };
 
   const handleRetry = () => {
-    setGameState('LOADING'); // Honek hitz berriak kargatuko ditu (edo gordetakoak arauen arabera)
+    setGameState('LOADING'); 
   };
 
-  const handlePlayTomorrow = () => {
+  const handleGoToStartScreen = () => {
     setGameState('START_SCREEN'); 
   };
 
   if (gameState === 'START_SCREEN') {
-    return <StartScreen onStartGame={handleStartGame} disabled={!canPlayToday} />;
+    return <StartScreen onStartGame={handleStartGame} />; // Removed disabled prop
   }
 
   if (gameState === 'LOADING') {
@@ -220,7 +183,7 @@ const App: React.FC = () => {
         answers={userAnswers}
         score={totalScore}
         totalQuestions={questions.length}
-        onPlayTomorrow={handlePlayTomorrow}
+        onPlayAgain={handleGoToStartScreen} // Renamed prop and function
       />
     );
   }

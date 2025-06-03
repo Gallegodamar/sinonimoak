@@ -19,7 +19,7 @@ export type GameState = 'START_SCREEN' | 'LOADING' | 'PLAYING' | 'RESULTS' | 'ER
 export interface StoredGameData {
   questions: DailyQuestion[];
   fetchTimestamp: string; // ISO string
-  lastPlayedDate?: string; // ISO string, noiz jokatu zen azkenekoz
+  // lastPlayedDate?: string; // ISO string, noiz jokatu zen azkenekoz - REMOVED
 }
 
 export enum FeedbackType {
