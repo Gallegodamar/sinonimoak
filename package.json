@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "description": "Euskarazko sinonimoak ikasteko eguneroko jokoa.",
   "scripts": {
-    "dev": "echo 'Exekutatu index.html arakatzaile batean garapen zerbitzari batekin (adib. Live Server VSCode-n)'",
-    "build": "echo 'Eraikuntza urratsa ez da beharrezkoa esbuild/CDN erabiliz gero.'"
-  },
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview"
+},
   "keywords": [
     "react",
     "typescript",
